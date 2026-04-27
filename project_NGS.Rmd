@@ -1,0 +1,93 @@
+---
+title: "project_NGS"
+author: "falleroni chiara"
+date: "2026-04-01"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data <- readRDS("/opt/omicsdata/datasets/SRP044668.rds")
+```
+
+```{r}
+library(omicsdata)
+library(limma)
+library(EDASeq)
+library(edgeR)
+library(dplyr)
+library(plyr)
+library(corrplot)
+library(ggfortify)
+```
+
+
+```{r}
+SRP044668 = SRP044668[rowS]
+```
+
+
+
+
+```{r}
+data = data[rowSum]
+
+
+
+info = colData(SRP044668)$sra.sample_attributes
+head(info)
+print(info)
+
+print(info)
+print(info[1:2])
+print(info[93:94])
+
+a = SRP044668$sra.sample_attributes
+
+raw_counts <- assay(SRP044668)
+dim(raw_counts)
+
+glioma = SRP044668[,grepl("glioma", info)]
+
+str(glioma)
+
+non_neoplastic = SRP044668[,grepl("non-neoplastic", info)]
+
+str(non_neoplastic)
+
+```
+
+
+#######
+PER SCARICARE GITHUB
+Dal terminale facciamo
+
+```{r}
+git --version (2.43.0 va bene)
+```
+
+```{r}
+#colleghiamo git a github
+(sempre da terminale)
+
+git config --global user.name "chiarafalleroni"
+git config --global user.email "chiara.falleroni@studenti.unipd.it"
+
+#cloniamo il repository (ho fatto con il mio)
+
+git clone https://github.com/utente/repo.git
+cd repo
+
+#poi sarà
+git pull          # prendi aggiornamenti
+# modifichi file .R
+
+git add .
+git commit -m "modifica script R"
+git push
+```
+
