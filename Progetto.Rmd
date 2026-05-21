@@ -79,7 +79,7 @@ In contrast, **non-enhancing (NE)** tumor regions refer to the infiltrative marg
 
 In this study, we analyze RNA-seq data from glioma and non-neoplastic brain tissues to investigate differences in gene expression profiles. Specifically, we aim to compare tumor samples with normal brain tissue and to further explore differences between CE and NE tumor regions. This allows us to assess how cellular composition and tumor heterogeneity influence gene expression patterns.
 
-\vspace{2cm}
+\vspace{1cm}
 
 The main objectives of this analysis are:  
 
@@ -144,13 +144,13 @@ if (file.exists("SRP044668.rds")) {
 
 Let's give a look at the data's structure. 
 
-```{r}
+```{r, comment=NA}
 #str(SRP)
 
 cat("The dataset contains", nrow(SRP), "genes across", ncol(SRP), "samples.")
 ```
 
-```{r}
+```{r, comment=NA}
 cat("The object contains the assay:", names(assays(SRP)))
 ```
 
@@ -196,7 +196,7 @@ colData(SRP)$class_2way = factor(colData(SRP)$class_2way,
 
 As a team, we decide to exclude genes with expression levels at 0 or extremely low levels in all samples here, before the EDA, and not in the quality control paragraph. We do this because we believe this row filtering is not a quality control but a basic definition of the rows we consider "data". We also decide to use the FilterByExpr (from edgeR) function, a much more statistically reliable tool.
 
-```{r}
+```{r, comment=NA}
 # genes with all zero counts
 cat(
   "Genes with all zero counts:",
@@ -719,20 +719,17 @@ estimated_sex = ifelse(
 
 ```
 
-```{r}
+```{r, comment=NA}
 summary(colData(SRP)$`recount_qc.aligned_reads%.chry`)
 ```
 
-
-```{r}
+```{r, comment=NA}
 table(estimated_sex, colData(SRP)$class_2way)
 ```
 
-```{r}
+```{r, comment=NA}
 table(estimated_sex, colData(SRP)$class_3way)
 ```
-
-
 
 ```{r}
 estimated_sex = factor(
@@ -805,12 +802,6 @@ These NA values are typically associated with genes showing extremely low expres
 res_ne = na.omit(res_ne)
 res_ce = na.omit(res_ce)
 res_ne_ce = na.omit(res_ne_ce)
-```
-
-```{r}
-print(dim(res_ce))
-print(dim(res_ne))
-print(dim(res_ne_ce))
 ```
 
 ## MA plot
@@ -986,7 +977,7 @@ The number of significant DEGs was then evaluated for each comparison in order t
 For each comparison, significant genes were ranked according to adjusted p-value, and the top 20 most significant DEGs were selected for further inspection.  
 Since gene identifiers were initially reported as Ensembl IDs, an additional annotation step was performed to convert them into gene symbols, allowing a clearer biological interpretation of the results.
 
-```{r}
+```{r, comment=NA}
 #filtering DEGs 
 degs_ce= res_ce[res_ce$padj < 0.01 & abs(res_ce$log2FoldChange) > 2,]
 cat("In glioma_ce against control there are",nrow(degs_ce),"DEGs \n")
@@ -998,22 +989,6 @@ degs_ne_ce= res_ne_ce[res_ne_ce$padj < 0.01 & abs(res_ne_ce$log2FoldChange) > 2,
 cat("In glioma_ne against glioma_ce there are",nrow(degs_ne_ce),"DEGs")
 ```
 Given the extremely high amount of DEGs (up to 60% of the trascriptome) found using a 0.05 p-value threshold we adjust it at 0.01 and set a log2Foldchange threshold at 2.
-
-```{r}
-
-  #riusiamo mart x conversione
-  #gene_symbols <- getBM(
-    #attributes = c(
-      #"ensembl_gene_id",
-      #"external_gene_name"
-    #),
-    #filters = "ensembl_gene_id",
-    #values = temp_df$Gene_clean,
-    #mart = mart
-    #)
-
-#parte che lo levato sotto per provare a fare sta roba
-```
 
 ```{r}
 # ordering the most significative
@@ -1142,7 +1117,7 @@ In particular, control samples appear clearly separated from glioma samples, ref
 Glioma_CE and glioma_NE samples show partially overlapping but still distinguishable expression profiles, supporting the presence of both shared tumor-related signatures and region-specific molecular alterations. The partial overlap between the two glioma regions may also reflect tissue heterogeneity and contamination from non-tumoral cellular components, especially in non-enhancing samples where infiltrating tumor cells are often intermixed with surrounding brain tissue.  
 Overall, the observed clustering patterns confirm that the selected top DEGs capture biologically relevant transcriptional variability across the dataset.
 
-# Gene set analysis
+# Functional profiling
 
 ## ORA
 
@@ -1152,7 +1127,7 @@ Overall, the observed clustering patterns confirm that the selected top DEGs cap
 #dim(degs_ne_ce)
 ```
 
-```{r}
+```{r, comment=NA}
 for (v in c("_ce", "_ne", "_ne_ce")) {
   nome_res = paste0("res",v)
   nome_degs = paste0("degs",v)
@@ -1202,9 +1177,19 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
               pAdjustMethod = "BH",
               readable = TRUE))
 
+  cat(
+  "The comparison", v,
+  "identified",
+  nrow(get(nome_degs)),
+  "significant DEGs,",
+  nrow(get(nome_ora)),
+  "significantly enriched KEGG pathways and",
+  nrow(get(nome_oraGO)),
+  "GO biological processes.\n\n"
+)
   
-  print(dim(get(nome_degs)))
-  print(dim(get(nome_res)))
+  #print(dim(get(nome_degs)))
+  #print(dim(get(nome_res)))
   
   assign(nome_graf, upsetplot(get(nome_ora),5)) +
     ggtitle(paste0("KEGG database, ",v)) + 
@@ -1215,25 +1200,31 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   
 }
 
-dim(ora_ce)
-dim(ora_ne)
-dim(ora_ne_ce)
+#dim(ora_ce)
+#dim(ora_ne)
+#dim(ora_ne_ce)
 
-dim(oraGO_ce)
-dim(oraGO_ne)
-dim(oraGO_ne_ce)
-
+#dim(oraGO_ce)
+#dim(oraGO_ne)
+#dim(oraGO_ne_ce)
 
 ```
 
 ```{r}
-ora_ce@result[1:10, c(4,5,8)]
-ora_ne@result[1:10,c(4,5,8)]
-ora_ne_ce@result[1:10,c(4,5,8)]
+#KEGG
+knitr::kable(ora_ce@result[1:10, c(4,5,8)], caption = "KEGG ORA results for glioma_CE vs control comparison")
 
-oraGO_ce@result[1:10,c(2,3,6)]
-oraGO_ne@result[1:10,c(2,3,6)]
-oraGO_ne_ce@result[1:10,c(2,3,6)]
+knitr::kable(ora_ne@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs control comparison")
+
+knitr::kable(ora_ne_ce@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs glioma_CE comparison")
+
+#GO
+knitr::kable(oraGO_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_CE vs control comparison")
+
+knitr::kable(oraGO_ne@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs glioma_CE comparison")
+
+knitr::kable(oraGO_ne_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs glioma_CE comparison")
+
 ```
 Ordinate per significativita non per magnitudo!!!
 
@@ -1327,23 +1318,40 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
           pAdjustMethod = "BH"))
   
   
-  print(dim(get(nome_gse)))
-  print(dim(get(nome_gseGO)))
+  #print(dim(get(nome_gse)))
+  #print(dim(get(nome_gseGO)))
+  
+  comparison_name <- switch(
+  v,
+  "_ce" = "glioma_CE vs control",
+  "_ne" = "glioma_NE vs control",
+  "_ne_ce" = "glioma_NE vs glioma_CE"
+)
+
+cat(
+  "The GSEA performed on the",
+  comparison_name,
+  "comparison identified",
+  nrow(get(nome_gse)),
+  "significantly enriched KEGG pathways and",
+  nrow(get(nome_gseGO)),
+  "GO biological processes.\n\n"
+)
 }
 
 ```
-```{r}
-gse_ne@result[1:10,c(2,3,5)]
-gse_ce@result[1:10,c(2,3,5)]
-gse_ne_ce@result[1:10,c(2,3,5)]
 
-gseGO_ce@result[1:10,c(2,3,5)]
-gseGO_ne@result[1:10,c(2,3,5)]
-gseGO_ne_ce@result[1:10,c(2,3,5)]
+```{r}
+knitr::kable(gse_ne@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_CE vs control comparison")
+knitr::kable(gse_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs control comparison")
+knitr::kable(gse_ne_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs glioma_CE comparison")
+
+knitr::kable(gseGO_ce@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_CE vs control comparison")
+knitr::kable(gseGO_ne@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_NE vs control comparison")
+knitr::kable(gseGO_ne_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs glioma_CE comparison")
 ```
 
 ```{r fig.height=16, fig.width=8}
-
 
 # 1. Salvi i tuoi tre plot in tre oggetti separati
 plot_ce <- ridgeplot(gse_ce, showCategory = 10) + ggtitle("CE vs Sano")
