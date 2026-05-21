@@ -1188,9 +1188,6 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   "GO biological processes.\n\n"
 )
   
-  #print(dim(get(nome_degs)))
-  #print(dim(get(nome_res)))
-  
   assign(nome_graf, upsetplot(get(nome_ora),5) +
     ggtitle(paste0("KEGG database, ",v)) + 
     ylim(0, 20))
@@ -1199,15 +1196,6 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
     ylim(0, 20))
   
 }
-
-#dim(ora_ce)
-#dim(ora_ne)
-#dim(ora_ne_ce)
-
-#dim(oraGO_ce)
-#dim(oraGO_ne)
-#dim(oraGO_ne_ce)
-
 ```
 
 ```{r}
@@ -1257,8 +1245,6 @@ confronto_go <- compareCluster(geneCluster = lista_geni_ora,
 
 dotplot(confronto_kegg, showCategory = 10) + 
   ggtitle("Confronto Pathway KEGG tra le regioni del Glioma")
-
-
 
 ```
 
@@ -1317,10 +1303,6 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
           OrgDb='org.Hs.eg.db',
           keyType = "ENTREZID",
           pAdjustMethod = "BH"))
-  
-  
-  #print(dim(get(nome_gse)))
-  #print(dim(get(nome_gseGO)))
   
   comparison_name <- switch(
   v,
