@@ -1191,12 +1191,12 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   #print(dim(get(nome_degs)))
   #print(dim(get(nome_res)))
   
-  assign(nome_graf, upsetplot(get(nome_ora),5)) +
+  assign(nome_graf, upsetplot(get(nome_ora),5) +
     ggtitle(paste0("KEGG database, ",v)) + 
-    ylim(0, 20)
-  assign(nome_grafGO, upsetplot(get(nome_oraGO),5)) +
+    ylim(0, 20))
+  assign(nome_grafGO, upsetplot(get(nome_oraGO),5) +
     ggtitle(paste0("GO database, ",v)) +
-    ylim(0, 20)
+    ylim(0, 20))
   
 }
 
@@ -1262,10 +1262,11 @@ dotplot(confronto_kegg, showCategory = 10) +
 
 ```
 
-```{r fig.height=15, fig.width=12}
+```{r fig.height=15, fig.width=13}
 # UPSET PLOT --------------------
 
 final_graph = (graf_ce / graf_ne / graf_ne_ce) | (grafGO_ce / grafGO_ne / grafGO_ne_ce)
+
 final_graph
 
 ```
