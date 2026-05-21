@@ -54,6 +54,7 @@ library(org.Hs.eg.db)
 library(clusterProfiler)
 library(patchwork)
 library(enrichplot)
+library(pathview)
 ```
 
 ```{r}
@@ -1278,7 +1279,7 @@ final_graph
 
 ```
 
-# GSEA
+## GSEA
 
 ```{r}
 for (v in c("_ce", "_ne", "_ne_ce")) {
@@ -1363,7 +1364,66 @@ grafico_finale
 grafico_finale2
 ```
 
-capire chi sta a dx e chi a sx
+## Visualization of relevant pathways
+
+```{r}
+fold_changes_ce <- degs_ce$log2FoldChange
+names(fold_changes_ce) <- sign.entrez_ce
+
+fold_changes_ne <- degs_ne$log2FoldChange
+names(fold_changes_ne) <- sign.entrez_ne
+
+fold_changes_ne_ce <- degs_ne_ce$log2FoldChange
+names(fold_changes_ne_ce) <- sign.entrez_ne_ce
+```
+
+
+```{r}
+#glioma con glioma_ce
+
+pathview(gene.data = fold_changes_ce, pathway.id = "hsa05214", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa05214.pathview.png")
+```
+
+```{r}
+# Hypoxia-Inducible Factor 1 (ipossia causata da proliferazione  cellulare (+ effetto warburg), questo fattore causa angiogenesi)
+# in glioma_ce
+
+#pathview(gene.data = fold_changes_ce, pathway.id = "hsa04066", species = "hsa",
+         #low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+#knitr::include_graphics("hsa04066.pathview.png")
+
+```
+
+```{r}
+# perdita di funzione sinaptica ed eccitotossicità: sinapsi glutammatergica CE vs control
+
+pathview(gene.data = fold_changes_ce, pathway.id = "hsa04724", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04724.pathview.png")
+```
+
+
+```{r}
+# interazione con ECM in glioma_NE
+
+pathview(gene.data = fold_changes_ne, pathway.id = "hsa04512", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04512.pathview.png")
+```
+
+
+```{r}
+# Axon guidance: la prova che glioma_NE contro glioma_CE contiene mix cellulare con cellule sane
+
+pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04360", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04360.pathview.png")
+```
+
+
+DEFINIRE ASSOLUTAMENTE UNA DESTRA E SX PER TUTTI
 
 # ALTRO è PUNTI BONUSSSS
 
