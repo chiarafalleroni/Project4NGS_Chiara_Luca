@@ -25,7 +25,8 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+#echo se true mostra codice, se false lo nasconde
 ```
 
 
@@ -55,6 +56,8 @@ library(clusterProfiler)
 library(patchwork)
 library(enrichplot)
 library(pathview)
+#remotes::install_github("omnideconv/immunedeconv")
+library(immunedeconv)
 ```
 
 ```{r}
@@ -320,13 +323,15 @@ dfCounts_long |>
   ggplot(aes(x=Expression, fill=Class2way, colour = Class2way)) +
         geom_density(alpha=0.4) +
         scale_fill_manual(values = Class_pal2way) +
-        scale_color_manual(values = Class_pal2way)
+        scale_color_manual(values = Class_pal2way) +
+        ggtitle("2-way Density plot")
 
 dfCounts_long |>
-  ggplot(aes(x=Expression, fill=Class2way, colour = Class3way)) +
+  ggplot(aes(x=Expression, fill=Class3way, colour = Class3way)) +
         geom_density(alpha=0.4) +
         scale_fill_manual(values = Class_pal3way) +
-        scale_color_manual(values = Class_pal3way)
+        scale_color_manual(values = Class_pal3way) +
+        ggtitle("3-way Density plot")
 ```
 
 ## MD, MA and RLE plots
@@ -629,7 +634,7 @@ pc1_var_drivers_df =
 colnames(pc1_var_drivers_df) = c("Ensembl ID", "Contribution to PC1", "Clean ensembl ID", "Gene name")
 pc1_var_drivers_df = pc1_var_drivers_df[, c(4, 1, 3, 2)]
 
-pc1_var_drivers_df
+knitr::kable(pc1_var_drivers_df, caption = "PC1 loadings")
 
 ```
 
@@ -658,7 +663,7 @@ pc2_var_drivers_df =
 colnames(pc2_var_drivers_df) = c("Ensembl ID", "Contribution to PC2", "Clean ensembl ID", "Gene name")
 pc2_var_drivers_df = pc2_var_drivers_df[, c(4, 1, 3, 2)]
 
-pc2_var_drivers_df
+knitr::kable(pc2_var_drivers_df, caption = "PC2 loadings")
 
 ```
 
@@ -686,7 +691,7 @@ pc3_var_drivers_df =
 colnames(pc3_var_drivers_df) = c("Ensembl ID", "Contribution to PC3", "Clean ensembl ID", "Gene name")
 pc3_var_drivers_df = pc3_var_drivers_df[, c(4, 1, 3, 2)]
 
-pc3_var_drivers_df
+knitr::kable(pc3_var_drivers_df, caption = "PC3 loadings")
 
 ```
 
@@ -803,6 +808,15 @@ res_ne = na.omit(res_ne)
 res_ce = na.omit(res_ce)
 res_ne_ce = na.omit(res_ne_ce)
 ```
+
+**$log_2$ fold change of the gene expression was computed using:**
+
+$\log_{2_{\mathrm{NE\_CE}}}\left(\frac{\text{expression in glioma\_NE}}{\text{expression in glioma\_CE}}\right)$
+
+$\log_{2_{\mathrm{NE}}}\left(\frac{\text{expression in glioma\_NE}}{\text{expression in control}}\right)$
+
+$\log_{2_{\mathrm{CE}}}\left(\frac{\text{expression in glioma\_CE}}{\text{expression in control}}\right)$
+
 
 ## MA plot
 
@@ -1107,7 +1121,7 @@ pheatmap(
   show_rownames = TRUE,
   clustering_method = "complete",
   color = continuous_pal3,
-  main = "Top differentially expressed genes",
+  main = "Top differentially expressed genes in samples",
   annotation_colors = my_colors,
   show_colnames = FALSE
 )
@@ -1120,6 +1134,8 @@ Overall, the observed clustering patterns confirm that the selected top DEGs cap
 # Functional profiling
 
 ## ORA
+
+In this section, we will investigate the differentially expressed genes (DEGs) performing an over-representation analysis (ORA) to identify groups of genes sharing common functional pathways, in order to infer biological differences between glioma and control samples. Pathway enrichment analysis will be performed using both KEGG (Kyoto Encyclopedia of Genes and Genomes) and GO (Gene Ontology) databases. We will then present tables showing the top 10 most significantly enriched pathways for each comparison and database. Lastly, we will display some graphs to better understand the results.
 
 ```{r}
 #dim(degs_ce)
@@ -1183,17 +1199,16 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   nrow(get(nome_degs)),
   "significant DEGs,",
   nrow(get(nome_ora)),
-  "significantly enriched KEGG pathways and",
+  "significantly enriched KEGG pathways  \n and",
   nrow(get(nome_oraGO)),
   "GO biological processes.\n\n"
 )
   
   assign(nome_graf, upsetplot(get(nome_ora),5) +
-    ggtitle(paste0("KEGG database, ",v)) + 
-    ylim(0, 20))
+    ggtitle(paste0("KEGG database, ",v)))
+    
   assign(nome_grafGO, upsetplot(get(nome_oraGO),5) +
-    ggtitle(paste0("GO database, ",v)) +
-    ylim(0, 20))
+    ggtitle(paste0("GO database, ",v))) 
   
 }
 ```
@@ -1259,7 +1274,9 @@ final_graph
 
 ## GSEA
 
-```{r}
+In this section, we perform Gene Set Enrichment Analysis (GSEA) to identify whether predefined sets of genes (once again retrieved from KEGG and GO) show statistically significant, concordant differences between glioma and control samples. Unlike over-representation analysis (ORA), which relies on a predefined list of differentially expressed genes, GSEA considers all genes ranked by their expression changes, allowing the detection of subtle but coordinated biological signals. 
+
+```{r, comment=NA}
 for (v in c("_ce", "_ne", "_ne_ce")) {
   
   nome_res = paste0("res",v)
@@ -1316,7 +1333,7 @@ cat(
   comparison_name,
   "comparison identified",
   nrow(get(nome_gse)),
-  "significantly enriched KEGG pathways and",
+  "significantly enriched KEGG pathways \n and",
   nrow(get(nome_gseGO)),
   "GO biological processes.\n\n"
 )
@@ -1369,7 +1386,7 @@ names(fold_changes_ne_ce) <- sign.entrez_ne_ce
 ```
 
 
-```{r}
+```{r, out.width="\\textwidth", fig.align='center'}
 #glioma con glioma_ce
 
 pathview(gene.data = fold_changes_ce, pathway.id = "hsa05214", species = "hsa",
@@ -1387,7 +1404,7 @@ knitr::include_graphics("hsa05214.pathview.png")
 
 ```
 
-```{r}
+```{r, out.width="\\textwidth", fig.align='center'}
 # perdita di funzione sinaptica ed eccitotossicità: sinapsi glutammatergica CE vs control
 
 pathview(gene.data = fold_changes_ce, pathway.id = "hsa04724", species = "hsa",
@@ -1396,7 +1413,7 @@ knitr::include_graphics("hsa04724.pathview.png")
 ```
 
 
-```{r}
+```{r, out.width="\\textwidth", fig.align='center'}
 # interazione con ECM in glioma_NE
 
 pathview(gene.data = fold_changes_ne, pathway.id = "hsa04512", species = "hsa",
@@ -1405,7 +1422,7 @@ knitr::include_graphics("hsa04512.pathview.png")
 ```
 
 
-```{r}
+```{r, out.width="\\textwidth", fig.align='center'}
 # Axon guidance: la prova che glioma_NE contro glioma_CE contiene mix cellulare con cellule sane
 
 pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04360", species = "hsa",
@@ -1414,9 +1431,64 @@ knitr::include_graphics("hsa04360.pathview.png")
 ```
 
 
-DEFINIRE ASSOLUTAMENTE UNA DESTRA E SX PER TUTTI
 
-# ALTRO è PUNTI BONUSSSS
+
+# Venturing further: an attempt to untangle tumor microenvironment 
+
+Finally, trying to walk in the original author's footsteps, we performed a tumor microenvironment deconvolution analysis using the R package ***immunedeconv***, installed from GitHub. immunedeconv is a computational framework that integrates multiple established deconvolution methods to estimate the cellular composition of bulk transcriptomic data. It allows the inference of relative proportions of immune and stromal cell types from gene expression profiles, enabling a better characterization of the tumor microenvironment.
+
+The package acts as a unified interface to several algorithms (e.g., EPIC, CIBERSORT, xCell), each based on different reference signatures of immune cell gene expression. By comparing observed bulk RNA-seq profiles with these reference signatures, immunedeconv estimates the abundance of different cell populations within each sample, providing insights into immune infiltration and microenvironment heterogeneity between glioma and control tissues.
+
+Among the available deconvolution methods implemented in immunedeconv, we selected **EPIC** (*Estimating the Proportions of Immune and Cancer cells*) because it appeared to provide a robust and reliable framework for the analysis of bulk RNA-seq data derived from tumor tissues. EPIC is specifically designed to estimate the proportions of immune, stromal, and cancer cells within heterogeneous tumor samples by leveraging reference gene expression signatures from well-characterized cell populations.
+Compared with other approaches, EPIC is particularly suited for solid tumor microenvironment analyses, as it explicitly models both immune and non-immune cellular components. In addition, the method has been shown to perform robustly across different datasets and sequencing platforms, making it a widely adopted choice for transcriptomic deconvolution studies. 
+
+We fed epic algorithm with our DEseq2 normalized counts, but we know it was not the correct way to run the algorithm. In fact, during all the analysis we performed we worked with "gene_A/gene_A" proportions, never needing to normalize on gene lenght. But EPIC obviously compares different genes expression levels directly to assess a cellular signature, therefore *we should have normalized on the gene lenght*
+
+```{r}
+# Estrai le conte grezze dal tuo oggetto DESeq2
+conte_normalizzate <- counts(dds, normalized = T)
+
+# pulizia
+
+rownames(conte_normalizzate) <- gsub("\\..*", "", rownames(conte_normalizzate))
+
+# 1. Traduci gli ENSEMBL ID delle righe iFALSE# 1. Traduci gli ENSEMBL ID delle righe in Gene Symbols
+simboli <- mapIds(org.Hs.eg.db, keys = rownames(conte_normalizzate), column = "SYMBOL", keytype = "ENSEMBL", multiVals = "first")
+
+# 2. Assegna i nuovi simboli come nomi di riga (sostituendo quelli vecchi)
+rownames(conte_normalizzate) <- simboli
+
+# Esegui la deconvoluzione con quanTIseq
+risultati_deconvoluzione <- deconvolute(conte_normalizzate, method = "epic")
+
+#risultati_deconvoluzione
+```
+
+```{r fig.height=5, fig.width=11}
+
+
+
+toplot = pivot_longer(risultati_deconvoluzione, cols = -cell_type, names_to = "sample", values_to = "pres")
+cond = data.frame(condition = SRP$class_3way, sample = colnames(SRP))
+toplot = inner_join(toplot, cond)
+
+
+ggplot(toplot, aes(x=cell_type, y=pres, fill = condition)) +
+  geom_boxplot() +
+  facet_wrap(~condition, scales = "free_y") +
+  scale_fill_manual(values = Class_pal3way) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The deconvolution results seem to make sense, at least to some extent. In particular, the higher abundance of cancer-associated fibroblasts and endothelial cells in the glioma_CE samples is coherent with what we would expect from an aggressive tumor microenvironment, where angiogenesis and stromal remodeling are usually enhanced.
+
+At the same time, the very large estimated proportion of CD4+ T cells in the control brain samples makes the overall interpretation much more questionable. Since healthy brain tissue is generally considered an immunologically privileged environment, such a strong CD4+ T-cell signal is difficult, if not impossible, to justify biologically.
+
+One possible explanation is that some technical biases may have influenced the deconvolution results. Since EPIC relies on gene expression signatures and compares expression levels across many different genes, the normalization procedure may have unintentionally amplified part of the CD4+ signature. This could happen because genes associated with CD4+ T cells might be particularly highly expressed, longer, or overrepresented in the normalized matrix, leading the algorithm to overestimate the abundance of this population. Another really feasible possibility is that the reference signatures used by EPIC are not perfectly suited for brain tissue, which is a much more specialized and heterogeneous environment compared to the tissues on which these methods are usually benchmarked.
+
+Overall, while some trends are biologically reasonable, this paragraph's results should probably not be interpreted biologically as a reliable description of the glioma microenvironment.
+
 
 # Conclusions
 
