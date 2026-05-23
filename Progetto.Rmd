@@ -1212,25 +1212,68 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   
 }
 ```
+The enrichment analysis revealed substantial differences in the number of differentially expressed genes and associated biological signatures across the three comparisons.  
+The glioma_CE versus control comparison showed the largest number of significant DEGs together with the highest number of enriched KEGG pathways and GO biological processes, indicating extensive transcriptional alterations between tumor and non-tumor tissues.  
+In contrast, the glioma_NE versus control comparison identified fewer significant genes and enriched terms, suggesting a comparatively less pronounced transcriptional divergence.  
+The comparison between glioma_NE and glioma_CE samples displayed an intermediate number of DEGs and enriched pathways, consistent with the fact that both sample groups originate from tumor regions and therefore share common molecular characteristics while retaining region-specific biological differences. 
+Differences in pathway enrichment may also partially reflect variations in regional cellular composition and tissue sampling effects, potentially contributing to the observed transcriptional heterogeneity across glioma regions.
 
 ```{r}
 #KEGG
 knitr::kable(ora_ce@result[1:10, c(4,5,8)], caption = "KEGG ORA results for glioma_CE vs control comparison")
-
-knitr::kable(ora_ne@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs control comparison")
-
-knitr::kable(ora_ne_ce@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs glioma_CE comparison")
-
-#GO
-knitr::kable(oraGO_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_CE vs control comparison")
-
-knitr::kable(oraGO_ne@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs glioma_CE comparison")
-
-knitr::kable(oraGO_ne_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs glioma_CE comparison")
-
 ```
-Ordinate per significativita non per magnitudo!!!
+The KEGG over-representation analysis for the **glioma_CE versus control** comparison revealed enrichment of both neuronal and immune-related pathways. Neuroactive ligand-receptor interaction, Neuroactive signaling, and GABAergic synapse were among the most represented categories, indicating substantial alterations in neuronal communication programs.
+The presence of synaptic-related signatures may partially reflect residual brain tissue components and local sampling effects, but could also indicate disruption of neurobiological functions associated with glioma progression.
 
+At the same time, pathways involved in cytokine signaling, complement activation, and immune-related interactions were significantly enriched, suggesting the contribution of inflammatory processes and tumor microenvironment remodeling. Taken together, these findings support the presence of broad transcriptional alterations affecting both neural signaling and immune-associated mechanisms in glioma tissues.
+
+
+```{r}
+knitr::kable(ora_ne@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs control comparison")
+```
+In contrast, the KEGG enrichment analysis for **glioma_NE versus control** highlighted a stronger prevalence of immune- and microenvironment-associated pathways. Cytokine–cytokine receptor interaction, Chemokine signaling, and ECM-receptor interaction emerged among the most significantly enriched categories, indicating substantial changes in cell communication and tissue organization processes.  
+The enrichment of inflammatory and cytokine-related signatures likely reflects the contribution of the tumor microenvironment and local cellular interactions within the non-enhancing region. Additionally, the involvement of extracellular matrix pathways may indicate active tissue remodeling and infiltrative behavior, both characteristic features of glioma progression. Compared with the glioma_CE versus control comparison, neuronal and synaptic signatures appear less prominent, suggesting a stronger influence of local tissue composition and microenvironmental factors on the transcriptomic profile of the non-enhancing region.
+
+
+```{r}
+knitr::kable(ora_ne_ce@result[1:10,c(4,5,8)], caption = "KEGG ORA results for glioma_NE vs glioma_CE comparison")
+```
+The KEGG enrichment analysis comparing **glioma_NE and glioma_CE** highlighted a marked enrichment of neuronal and synaptic signaling pathways, including Neuroactive ligand-receptor interaction, Synaptic vesicle cycle, Calcium signaling, and several neurotransmission-related pathways. Unlike the previous comparisons involving control tissues, these findings likely reflect molecular differences between tumor regions rather than broad tumor-associated transcriptional alterations.
+
+The enrichment of pathways involved in neurotransmission and intracellular signaling suggests that the non-enhancing and contrast-enhancing regions retain distinct transcriptional programs associated with local cellular organization and regional tumor heterogeneity. In particular, pathways such as Calcium signaling and cAMP signaling are involved in cell communication and may contribute to functional differences across glioma compartments.  
+The strong representation of neuronal signatures may also reflect regional differences in surrounding tissue composition and local sampling effects, supporting the hypothesis that transcriptional variability across glioma regions is influenced not only by tumor-specific mechanisms but also by the surrounding microenvironment.
+
+
+```{r}
+#GO
+#Ordinate per significativita non per magnitudo!!!
+knitr::kable(oraGO_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_CE vs control comparison")
+```
+The GO enrichment analysis for the **glioma_CE versus control** comparison further confirmed the extensive transcriptional alterations observed in the KEGG analysis. Biological processes related to neuronal communication and synaptic activity, including regulation of trans-synaptic signaling, neurotransmitter transport and modulation of chemical synaptic transmission, represented the most significantly enriched categories. These findings suggest substantial disruption of neurobiological functions within tumor samples.
+
+In addition, immune-associated processes such as humoral immune response and antimicrobial humoral response were significantly enriched, supporting the presence of inflammatory activity and tumor microenvironment remodeling. The coexistence of neuronal and immune signatures suggests that glioma-associated transcriptomic alterations involve both intrinsic changes in cellular programs and interactions with surrounding tissue components.
+
+The persistence of strong synaptic signatures may also partially reflect differences in local tissue composition and regional sampling effects, indicating that part of the observed variability could derive from the contribution of residual neural elements surrounding the tumor tissue.
+
+
+```{r}
+knitr::kable(oraGO_ne@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs control")
+```
+In contrast with the glioma_CE comparison, the GO enrichment analysis for **glioma_NE versus control** samples revealed a stronger predominance of immune-related biological processes. Humoral immune response, antimicrobial response and leukocyte migration emerged among the most significantly enriched categories, suggesting a major contribution of inflammatory and immune-associated mechanisms.  
+The enrichment of these processes may reflect the influence of the tumor microenvironment and local cellular interactions occurring within the non-enhancing region. Furthermore, extracellular and immune-associated signatures could indicate active tissue remodeling and infiltration-related processes, which are frequently observed during glioma progression.  
+Compared with the glioma_CE analysis, neuronal and synaptic terms appear less represented among the most significant categories, suggesting that the transcriptomic profile of the non-enhancing region may be more strongly influenced by regional cellular composition and microenvironmental context.
+
+
+```{r}
+knitr::kable(oraGO_ne_ce@result[1:10,c(2,3,6)],caption = "GO ORA results for glioma_NE vs glioma_CE comparison")
+```
+The GO enrichment analysis comparing **glioma_NE and glioma_CE** samples revealed a strong overrepresentation of neuronal and synaptic biological processes, including modulation of chemical synaptic transmission, regulation of trans-synaptic signaling and neurotransmitter transport. Additional enriched categories involving membrane potential regulation and ion transport further support the presence of extensive differences in signaling-related cellular functions between the two tumor regions.  
+Since this comparison involves distinct regions within the same tumor rather than tumor versus healthy tissue, these findings are unlikely to represent broad tumor-associated alterations. Instead, they may reflect region-specific transcriptional programs and local differences in tissue organization. The predominance of synaptic and neurotransmission-related signatures suggests that the non-enhancing and contrast-enhancing regions preserve distinct molecular characteristics associated with regional tumor heterogeneity.  
+Furthermore, the persistence of strong neuronal signatures may partially reflect differences in local tissue composition and tissue sampling effects, indicating that part of the observed transcriptional variability could derive from varying contributions of surrounding neural components and microenvironmental context.
+
+
+To further investigate similarities and differences across glioma regions, a comparative enrichment analysis was performed using compareCluster.  
+This approach allows the simultaneous evaluation of enriched pathways and biological processes across multiple comparisons, highlighting both shared and condition-specific molecular signatures.
 ```{r fig.height=10, fig.width=8}
 library(clusterProfiler)
 
@@ -1248,7 +1291,7 @@ confronto_kegg <- compareCluster(geneCluster = lista_geni_ora,
 
 # 3. Plotta il risultato combinato
 dotplot(confronto_kegg, showCategory = 10) + 
-  ggtitle("Confronto Pathway KEGG tra le regioni del Glioma")
+  ggtitle("Pathway KEGG Comparison of Glioma Regions)
 
 # Usiamo compareCluster dicendogli di applicare "enrichGO"
 confronto_go <- compareCluster(geneCluster = lista_geni_ora, 
@@ -1258,10 +1301,21 @@ confronto_go <- compareCluster(geneCluster = lista_geni_ora,
                                pvalueCutoff = 0.05)
 # plottiamo
 
-dotplot(confronto_kegg, showCategory = 10) + 
-  ggtitle("Confronto Pathway KEGG tra le regioni del Glioma")
-
+dotplot(confronto_go, showCategory = 10) + 
+  ggtitle("Pathway GO Comparison of Glioma Regions")
 ```
+The **comparative KEGG enrichment analysis** highlighted both shared and comparison-specific biological signatures across glioma regions. Neuronal and synaptic pathways, including neuroactive ligand-receptor interaction, GABAergic synapse and calcium signaling, were consistently represented across multiple comparisons, supporting the presence of substantial alterations affecting neurobiological functions.
+
+In contrast, pathways related to cytokine signaling, extracellular matrix interactions and transcriptional dysregulation appeared more strongly associated with the glioma_NE versus control comparison, suggesting a greater contribution of inflammatory responses and tumor microenvironment-related mechanisms.
+
+Overall, the coexistence of common and region-specific pathways supports the presence of transcriptional heterogeneity across glioma compartments and suggests that both intrinsic tumor programs and local tissue composition contribute to the observed molecular differences.
+
+Instead, the **comparative GO enrichment analysis** further emphasized the presence of both shared and region-specific biological signatures across the analyzed glioma comparisons. Processes associated with neuronal communication and synaptic activity, including regulation of trans-synaptic signaling, neurotransmitter transport and modulation of chemical synaptic transmission, were strongly represented in both the glioma_CE versus control and glioma_NE versus glioma_CE comparisons. This consistent enrichment suggests that alterations in neuronal signaling represent a major source of transcriptomic variability within the dataset.
+
+In contrast, the glioma_NE versus control comparison exhibited a stronger enrichment of immune-associated processes, including humoral immune response, leukocyte migration and antimicrobial response-related categories. These findings suggest a more prominent contribution of inflammatory mechanisms and tumor microenvironment interactions within the non-enhancing region.
+
+Overall, the coexistence of shared neuronal signatures and comparison-specific immune-related processes supports the presence of substantial regional heterogeneity within glioma tissues. Furthermore, the persistence of neuronal biological processes across multiple comparisons suggests that transcriptomic differences may arise not only from intrinsic tumor-associated mechanisms but also from variations in local tissue composition and surrounding neural components.
+
 
 ```{r fig.height=15, fig.width=13}
 # UPSET PLOT --------------------
@@ -1271,6 +1325,16 @@ final_graph = (graf_ce / graf_ne / graf_ne_ce) | (grafGO_ce / grafGO_ne / grafGO
 final_graph
 
 ```
+The KEGG UpSet plot for the **glioma_CE versus control** comparison highlights a strong prevalence of neuronal and signaling-related pathways, including neuroactive ligand-receptor interaction and GABAergic synapse. Immune-associated categories are also represented, suggesting that transcriptomic differences involve both neural signaling alterations and microenvironment-related processes.  
+INVECE, The GO UpSet plot confirms the predominance of synaptic and neuronal biological processes, such as trans-synaptic signaling and neurotransmitter transport. Immune-related signatures are also present, supporting the coexistence of neurobiological and inflammatory alterations in glioma samples.
+
+The KEGG UpSet plot for **glioma_NE versus control** samples shows a stronger representation of immune and extracellular matrix-related pathways, including cytokine signaling and ECM-receptor interaction. These results suggest a greater influence of microenvironmental and tissue remodeling mechanisms in the non-enhancing region.  
+INVECE The GO enrichment profile is dominated by immune-related biological processes, including humoral responses and leukocyte-associated signatures. This pattern further supports the contribution of inflammatory activity and local tumor microenvironment interactions.  
+
+The KEGG UpSet plot **comparing the two tumor** regions reveals enrichment of signaling pathways associated with neuronal communication, including calcium signaling and synaptic-related pathways. These findings suggest the presence of region-specific molecular programs within glioma tissues.  
+The GO results further support regional heterogeneity, with enrichment of processes involved in synaptic transmission and membrane potential regulation. The persistence of neuronal signatures may also partially reflect differences in local tissue composition across tumor regions.
+
+
 
 ## GSEA
 
@@ -1340,26 +1404,65 @@ cat(
 }
 
 ```
+The GSEA identified a substantially larger number of enriched biological categories compared with the previous ORA approach across all comparisons. This outcome is expected, since GSEA evaluates the complete ranked gene expression profile rather than relying exclusively on predefined significant DEGs, allowing the detection of coordinated but more subtle transcriptional signals.  
+Among the analyzed comparisons, the glioma_NE versus glioma_CE comparison showed the largest number of enriched GO biological processes, suggesting pronounced transcriptional heterogeneity between the two tumor regions. The glioma_CE and glioma_NE comparisons against control samples also revealed a considerable number of enriched pathways, supporting the presence of extensive molecular alterations associated with glioma tissues.  
+Overall, these findings indicate that transcriptomic differences are not limited to highly differentially expressed genes but also involve broader coordinated changes affecting multiple biological programs.
 
 ```{r}
 knitr::kable(gse_ne@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_CE vs control comparison")
 knitr::kable(gse_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs control comparison")
 knitr::kable(gse_ne_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs glioma_CE comparison")
+```
+The GSEA for the **glioma_CE versus control** comparison highlighted a strong enrichment of neuronal and synaptic-related pathways. Long-term potentiation, glutamatergic synapse and dopaminergic signaling emerged among the most significant categories and displayed predominantly negative normalized enrichment scores (NES), suggesting a coordinated reduction of neurobiological functions in tumor samples relative to controls.
 
+The widespread representation of synaptic signaling pathways supports the hypothesis that glioma tissues undergo substantial alterations affecting neuronal communication processes. In parallel, the presence of cytokine-related pathways indicates that immune-associated mechanisms and tumor microenvironment interactions may also contribute to the observed transcriptional changes.
+
+Compared with ORA, GSEA reveals that these alterations are not restricted to a subset of highly significant genes but rather involve broader coordinated expression patterns across multiple biological pathways.
+
+The GSEA performed on the **glioma_NE versus control** comparison revealed a strong enrichment of pathways associated with neuronal communication and synaptic activity. Neuroactive ligand signaling, long-term potentiation, glutamatergic synapse and GABAergic synapse represented the most significantly enriched categories and showed predominantly negative normalized enrichment scores (NES), indicating a coordinated reduction of neuronal functions within tumor samples relative to controls.
+
+Compared with the glioma_CE analysis, the stronger negative enrichment scores suggest an even more pronounced reduction of neurobiological signatures in the non-enhancing region. This finding may reflect substantial transcriptional reprogramming affecting signaling and communication pathways, although local differences in tissue composition and surrounding neural components could also contribute to the observed expression patterns.
+
+Similar to the previous analysis, immune-related signatures remained detectable, supporting the contribution of microenvironmental interactions alongside tumor-associated molecular alterations.  
+
+The GSEA comparing **glioma_NE and glioma_CE** samples revealed a marked enrichment of neuronal and neurotransmission-related pathways, including neuroactive ligand signaling, glutamatergic and GABAergic synapses, as well as multiple signaling processes associated with neuronal communication. Unlike the previous comparisons against control samples, most pathways displayed positive normalized enrichment scores (NES), indicating a relative increase of these signatures in the non-enhancing region compared with the contrast-enhancing region.
+
+These findings suggest the presence of region-specific transcriptional programs within glioma tissues and support the hypothesis of substantial intratumoral heterogeneity. The enrichment of pathways associated with synaptic signaling and neurotransmission may reflect biological differences between tumor compartments, potentially influenced by local cellular organization and surrounding tissue composition.
+
+Together with the previous analyses, these results indicate that molecular differences between glioma regions are not limited to isolated genes but involve coordinated alterations affecting broader neurobiological pathways.
+
+#guarda gli invece sopra
+```{r}
 knitr::kable(gseGO_ce@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_CE vs control comparison")
 knitr::kable(gseGO_ne@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_NE vs control comparison")
 knitr::kable(gseGO_ne_ce@result[1:10,c(2,3,5)], caption = "KEGG GSEA results for glioma_NE vs glioma_CE comparison")
 ```
+The GO-GSEA analysis for the **glioma_CE versus control** comparison revealed a strong enrichment of biological processes associated with synaptic signaling and neuronal communication. Processes including synaptic vesicle exocytosis, neurotransmitter secretion and regulation of trans-synaptic signaling displayed strongly negative normalized enrichment scores (NES), indicating a coordinated reduction of neurobiological functions within tumor samples relative to controls.
+
+Compared with ORA, the GSEA approach further supports the existence of broad transcriptional alterations affecting neuronal programs, suggesting that these changes involve coordinated shifts across large groups of functionally related genes rather than isolated differentially expressed transcripts.
+
+The persistence of neuronal signatures may also reflect the contribution of local tissue composition and surrounding neural components, in addition to tumor-associated transcriptional reprogramming.  
+The GO-GSEA analysis for the **glioma_NE versus control** comparison revealed a strong enrichment of biological processes involved in synaptic signaling and neuronal communication. Processes related to synaptic vesicle exocytosis, neurotransmitter secretion and signal release from synapses showed strongly negative normalized enrichment scores (NES), indicating a coordinated reduction of neuronal functions in tumor samples relative to control tissues.
+
+Compared with the glioma_CE analysis, the more pronounced negative enrichment scores suggest an even stronger reduction of neurobiological signatures within the non-enhancing region. The enrichment of processes related to dendrite organization and postsynaptic regulation further supports widespread alterations affecting neuronal connectivity and signaling mechanisms.
+
+These findings indicate that the observed transcriptional changes extend beyond individual genes and involve coordinated biological programs, while local tissue composition and surrounding neural elements may also contribute to the detected expression patterns.  
+The GO-GSEA analysis comparing **glioma_NE and glioma_CE** samples revealed the coexistence of positively and negatively enriched biological processes, suggesting substantial molecular heterogeneity between the two tumor regions. Processes related to synaptic communication, including neurotransmitter secretion, synaptic vesicle exocytosis and signal release from synapses, showed positive normalized enrichment scores (NES), indicating their relative enrichment within the non-enhancing region.
+
+In contrast, processes associated with cytoskeletal organization and cilium-related functions, including axoneme assembly and microtubule bundle formation, displayed negative enrichment scores, suggesting differential regulation within the contrast-enhancing region.
+
+These findings support the existence of region-specific transcriptional programs across glioma tissues and indicate that differences between tumor compartments involve coordinated biological changes extending beyond isolated gene expression alterations.  
+
 
 ```{r fig.height=16, fig.width=8}
 
 # 1. Salvi i tuoi tre plot in tre oggetti separati
-plot_ce <- ridgeplot(gse_ce, showCategory = 10) + ggtitle("CE vs Sano")
-plot_ne <- ridgeplot(gse_ne, showCategory = 10) + ggtitle("NE vs Sano")
+plot_ce <- ridgeplot(gse_ce, showCategory = 10) + ggtitle("CE vs control")
+plot_ne <- ridgeplot(gse_ne, showCategory = 10) + ggtitle("NE vs control")
 plot_diff <- ridgeplot(gse_ne_ce, showCategory = 10) + ggtitle("CE vs NE")
 
-plot_ceGO <- ridgeplot(gseGO_ce, showCategory = 10) + ggtitle("CE vs Sano")
-plot_neGO <- ridgeplot(gseGO_ne, showCategory = 10) + ggtitle("NE vs Sano")
+plot_ceGO <- ridgeplot(gseGO_ce, showCategory = 10) + ggtitle("CE vs control")
+plot_neGO <- ridgeplot(gseGO_ne, showCategory = 10) + ggtitle("NE vs control")
 plot_diffGO <- ridgeplot(gseGO_ne_ce, showCategory = 10) + ggtitle("CE vs NE")
 
 
@@ -1369,8 +1472,28 @@ grafico_finale2 = (plot_ceGO / plot_neGO / plot_diffGO)
 
 # 3. Visualizzi e salvi
 grafico_finale
+```
+The ridgeplot representation of KEGG GSEA results provides a broader view of the coordinated transcriptional changes occurring across the different glioma regions and control samples. In the **glioma_CE versus control** comparison, most neuronal and synaptic-related pathways, including *Long-term potentiation, Glutamatergic synapse, GABAergic synapse, and Neuroactive ligand signaling*, display distributions shifted toward negative enrichment values. Since negative values in this comparison are associated with control samples, these findings suggest that neuronal communication programs are relatively depleted in glioma_CE tissues and remain more strongly represented in control samples. Conversely, pathways related to cytokine interactions tend to display enrichment toward positive values, indicating a relative increase in immune- and microenvironment-associated mechanisms within tumor tissues.
+
+A very similar pattern can be observed in the **glioma_NE versus control** comparison. Neuronal and synaptic pathways such as *Long-term potentiation, Glutamatergic synapse, and Dopaminergic synapse* are again shifted toward negative enrichment values, suggesting that these biological programs are more strongly represented in control samples and relatively reduced within glioma_NE tissues.  
+At the same time, pathways associated with cytokine signaling and other non-neuronal processes show enrichment toward positive values, further supporting the progressive replacement of physiological neuronal functions by tumor-associated transcriptional programs.
+
+When directly comparing the two tumor regions (**glioma_CE versus glioma_NE**), a different pattern emerges. Several pathways involvedin neuronal signaling and synaptic communication, including *Neuroactive ligand signaling, GABAergic synapse, Glutamatergic synapse, Retrograde endocannabinoid signaling, and Serotonergic synapse*, are shifted toward positive enrichment values. Since positive values in this comparison correspond to glioma_NE samples, these findings suggest a relative enrichment of neuronal transcriptional programs within the non-enhancing region. In contrast, a smaller subset of pathways, such as Systemic lupus erythematosus, shows enrichment toward negative values, indicating a stronger association with the contrast-enhancing region.
+
+Overall, these observations further support the presence of substantial intratumoral heterogeneity and indicate that distinct glioma regions are characterized by coordinated differences affecting broad biological programs rather than isolated genes. In addition, the ridgeplot distributions reveal the presence of extended tails in some pathways, likely reflecting the contribution of a limited number of genes displaying particularly strong expression changes. This suggests that, alongside broad coordinated transcriptional shifts, specific genes may exert a substantial influence on pathway-level enrichment patterns.
+
+
+```{r fig.height=16, fig.width=8}
 grafico_finale2
 ```
+The GO GSEA ridgeplots further emphasize the substantial transcriptional differences between glioma tissues and control samples while also highlighting biological heterogeneity across tumor regions. In both the **glioma_CE versus control** and **glioma_NE versus control** comparisons, several biological processes involved in neuronal communication and synaptic activity are consistently shifted toward negative enrichment values. Processes such as *synaptic vesicle exocytosis, neurotransmitter secretion, signal release from synapse, regulation of trans-synaptic signaling, and regulation of postsynaptic membrane potential* remain more strongly represented in control samples, indicating a relative depletion of physiological neuronal programs within glioma tissues.
+
+Beyond neurotransmitter release itself, additional processes associated with neuronal organization, including *dendrite extension* and *postsynaptic regulation mechanisms*, follow similar enrichment patterns. The coordinated behavior of these pathways suggests that the observed alterations are not restricted to isolated genes but rather involve broad transcriptional programs regulating neuronal communication, signaling, and structural organization. Overall, these findings support the progressive disruption of normal neuronal functions within tumor tissues.
+
+A different pattern emerges when directly comparing **glioma_CE and glioma_NE** regions. Processes associated with neuronal communication, including *synaptic vesicle exocytosis, vesicle-mediated transport in synapse, signal release from synapse, and neurotransmitter secretion*, display enrichment toward positive values, which in this comparison correspond to glioma_NE samples. This indicates a relative enrichment of neuronal and synaptic signatures within the non-enhancing region.
+
+Conversely, pathways involved in cellular structure and motility, such as *motile cilium assembly, cilium movement, microtubule bundle formation, and axoneme assembly*, show enrichment toward negative values, suggesting a stronger association with glioma_CE tissues. Together, these observations indicate that the differences between tumor regions extend beyond signaling pathways and involve broader biological programs affecting tissue organization and cellular architecture. Overall, the results further reinforce the presence of marked intratumoral heterogeneity characterized by distinct molecular signatures across glioma compartments.
+
 
 ## Visualization of relevant pathways
 
@@ -1393,6 +1516,7 @@ pathview(gene.data = fold_changes_ce, pathway.id = "hsa05214", species = "hsa",
          low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
 knitr::include_graphics("hsa05214.pathview.png")
 ```
+
 
 ```{r}
 # Hypoxia-Inducible Factor 1 (ipossia causata da proliferazione  cellulare (+ effetto warburg), questo fattore causa angiogenesi)
@@ -1429,8 +1553,6 @@ pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04360", species = "hsa
          low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
 knitr::include_graphics("hsa04360.pathview.png")
 ```
-
-
 
 
 # Venturing further: an attempt to untangle tumor microenvironment 
