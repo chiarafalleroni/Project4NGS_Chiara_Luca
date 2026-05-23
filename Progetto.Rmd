@@ -865,7 +865,7 @@ This last MA plot compare glioma_NE and glioma_CE samples. It shows that most ge
 Part of these differences may also be influenced by tissue sampling heterogeneity and contamination from non-tumoral cell populations. In particular, non-enhancing regions are often characterized by infiltrating tumor cells intermixed with normal brain tissue, immune cells, and stromal components, which can contribute to the observed transcriptional variability.  
 Compared with the tumor-versus-control comparisons, the overall distribution appears more compact, reflecting the greater biological similarity between the two glioma subtypes despite the presence of distinct molecular alterations.
 
-## VOLCANO plot
+## Volcano plot
 
 Volcano plots were generated to simultaneously visualize the magnitude of gene expression changes and their statistical significance across the different comparisons.  
 In these plots, each point represents a gene, the x-axis corresponds to the **log2 fold change** between the two conditions, while the y-axis represents the **negative logarithm of the adjusted p-value** (`-log10(padj)`).
@@ -1086,7 +1086,7 @@ The enrichment of neuronal-related genes in glioma_NE samples may reflect the in
 In addition, genes such as *ARHGAP44* and *RAPGEF4*, involved in intracellular signaling and cytoskeletal regulation, may indicate molecular mechanisms associated with tumor cell plasticity and regional adaptation.  
 Overall, these results support the presence of biologically distinct transcriptional programs between contrast-enhancing and non-enhancing glioma regions.
 
-## HEATMAP
+## Heathmap
 
 A heatmap was generated using the top differentially expressed genes identified across all pairwise comparisons in order to visualize global expression patterns and sample clustering among the analyzed conditions.  
 Expression values were extracted from the variance stabilized transformed (VST) dataset and scaled by row to facilitate the comparison of relative gene expression across samples.
@@ -1212,7 +1212,7 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
   
 }
 ```
-The enrichment analysis revealed substantial differences in the number of differentially expressed genes and associated biological signatures across the three comparisons.  
+The enrichment analysis revealed substantial differences in the number of biological signatures across the three comparisons.  
 The glioma_CE versus control comparison showed the largest number of significant DEGs together with the highest number of enriched KEGG pathways and GO biological processes, indicating extensive transcriptional alterations between tumor and non-tumor tissues.  
 In contrast, the glioma_NE versus control comparison identified fewer significant genes and enriched terms, suggesting a comparatively less pronounced transcriptional divergence.  
 The comparison between glioma_NE and glioma_CE samples displayed an intermediate number of DEGs and enriched pathways, consistent with the fact that both sample groups originate from tumor regions and therefore share common molecular characteristics while retaining region-specific biological differences. 
@@ -1291,9 +1291,10 @@ confronto_kegg <- compareCluster(geneCluster = lista_geni_ora,
 
 # 3. Plotta il risultato combinato
 dotplot(confronto_kegg, showCategory = 10) + 
-  ggtitle("Pathway KEGG Comparison of Glioma Regions)
+  ggtitle("Pathway KEGG Comparison of Glioma Regions")
 
-# Usiamo compareCluster dicendogli di applicare "enrichGO"
+#Usiamo compareCluster dicendogli di applicare enrichgo
+
 confronto_go <- compareCluster(geneCluster = lista_geni_ora, 
                                fun = "enrichGO", 
                                OrgDb = org.Hs.eg.db, # Specifico per GO
@@ -1395,7 +1396,7 @@ for (v in c("_ce", "_ne", "_ne_ce")) {
 cat(
   "The GSEA performed on the",
   comparison_name,
-  "comparison identified",
+  "comparison identified \n",
   nrow(get(nome_gse)),
   "significantly enriched KEGG pathways \n and",
   nrow(get(nome_gseGO)),
@@ -1431,7 +1432,6 @@ These findings suggest the presence of region-specific transcriptional programs 
 
 Together with the previous analyses, these results indicate that molecular differences between glioma regions are not limited to isolated genes but involve coordinated alterations affecting broader neurobiological pathways.
 
-#guarda gli invece sopra
 ```{r}
 knitr::kable(gseGO_ce@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_CE vs control comparison")
 knitr::kable(gseGO_ne@result[1:10,c(2,3,5)], caption = "GO GSEA results for glioma_NE vs control comparison")
@@ -1497,6 +1497,8 @@ Conversely, pathways involved in cellular structure and motility, such as *motil
 
 ## Visualization of relevant pathways
 
+We here aim to graphically represent the differential expression of critical pathways relevant to the considered conditions. To do so we'll exploit the amazing library of illustrated biological pathways provided by the KEGG database.
+
 ```{r}
 fold_changes_ce <- degs_ce$log2FoldChange
 names(fold_changes_ce) <- sign.entrez_ce
@@ -1508,6 +1510,7 @@ fold_changes_ne_ce <- degs_ne_ce$log2FoldChange
 names(fold_changes_ne_ce) <- sign.entrez_ne_ce
 ```
 
+### Glioma pathway in glioma_ce vs control
 
 ```{r, out.width="\\textwidth", fig.align='center'}
 #glioma con glioma_ce
@@ -1526,7 +1529,36 @@ knitr::include_graphics("hsa05214.pathview.png")
          #low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
 #knitr::include_graphics("hsa04066.pathview.png")
 
+#togliamo per non appesantire
+
 ```
+
+### An unexpected result: go, grow... or do both?!
+
+**glioma_ce vs control**
+```{r,out.width="50%", fig.align='center'}
+pathview(gene.data = fold_changes_ce, pathway.id = "hsa04110", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04110.pathview.png")
+```
+
+
+**glioma_ne vs control**
+```{r,out.width="50%", fig.align='center'}
+pathview(gene.data = fold_changes_ne, pathway.id = "hsa04110", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04110.pathview.png")
+```
+**glioma_ce vs glioma_ne**
+```{r, out.width="50%", fig.align='center'}
+pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04110", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04110.pathview.png")
+```
+
+It's a famous conception in oncology (but also other fields such as developmental biology) that, since both migration and cellular division are really energetically expensive activities, a cell in migration will stop the cell cycle. We wanted to show this here, and we partially did by observing less upregulated cell cycle genes in glioma_NE vs control than in glioma_CE vs control; but at the end of the day, if we compare the solid CE portion of the tumor to the migrant NE portion we do not observe any relevant difference with the used methods.
+
+### a filthy trick: inflammation (and excitotossicity)
 
 ```{r, out.width="\\textwidth", fig.align='center'}
 # perdita di funzione sinaptica ed eccitotossicità: sinapsi glutammatergica CE vs control
@@ -1536,8 +1568,12 @@ pathview(gene.data = fold_changes_ce, pathway.id = "hsa04724", species = "hsa",
 knitr::include_graphics("hsa04724.pathview.png")
 ```
 
+By showing the glutammatergic synapse pathway in glioma_ce vs control we see (as already said multiple times) a elevate loss of synaptic function in the glioma. The loss of function might also be connected with the tumor exploiting glutammate excitotossicity. The upregulation of the PLA2's transcript (a lipase involved in inflammation) is on the other hand a clear sign of the tumor inducing an inflammatory state, that is helps it grow.
 
-```{r, out.width="\\textwidth", fig.align='center'}
+### ECM interaction in 
+
+**glioma_NE vs control**
+```{r, out.width="80%", fig.align='center'}
 # interazione con ECM in glioma_NE
 
 pathview(gene.data = fold_changes_ne, pathway.id = "hsa04512", species = "hsa",
@@ -1545,6 +1581,16 @@ pathview(gene.data = fold_changes_ne, pathway.id = "hsa04512", species = "hsa",
 knitr::include_graphics("hsa04512.pathview.png")
 ```
 
+```{r, out.width="80%", fig.align='center'}
+
+pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04512", species = "hsa",
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
+knitr::include_graphics("hsa04512.pathview.png")
+```
+
+What we see is a clear and strong sign of migration via ECM in the glioma_NE. 
+
+### Axon guidance in glioma_NE vs glioma_CE
 
 ```{r, out.width="\\textwidth", fig.align='center'}
 # Axon guidance: la prova che glioma_NE contro glioma_CE contiene mix cellulare con cellule sane
@@ -1554,6 +1600,7 @@ pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04360", species = "hsa
 knitr::include_graphics("hsa04360.pathview.png")
 ```
 
+The fact glioma_NE has upregulated axon guidance genes with respect to glioma_CE strongly enhances the statement that glioma_NE samples are mixed with healthy neuron cells.
 
 # Venturing further: an attempt to untangle tumor microenvironment 
 
@@ -1587,8 +1634,6 @@ risultati_deconvoluzione <- deconvolute(conte_normalizzate, method = "epic")
 ```
 
 ```{r fig.height=5, fig.width=11}
-
-
 
 toplot = pivot_longer(risultati_deconvoluzione, cols = -cell_type, names_to = "sample", values_to = "pres")
 cond = data.frame(condition = SRP$class_3way, sample = colnames(SRP))
