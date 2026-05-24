@@ -1538,22 +1538,25 @@ knitr::include_graphics("hsa05214.pathview.png")
 **glioma_ce vs control**
 ```{r,out.width="50%", fig.align='center'}
 pathview(gene.data = fold_changes_ce, pathway.id = "hsa04110", species = "hsa",
-         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
-knitr::include_graphics("hsa04110.pathview.png")
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"),
+         out.suffix = "CE")
+knitr::include_graphics("hsa04110.CE.png")
 ```
 
 
 **glioma_ne vs control**
 ```{r,out.width="50%", fig.align='center'}
 pathview(gene.data = fold_changes_ne, pathway.id = "hsa04110", species = "hsa",
-         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
-knitr::include_graphics("hsa04110.pathview.png")
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"),
+         out.suffix = "NE")
+knitr::include_graphics("hsa04110.NE.png")
 ```
 **glioma_ce vs glioma_ne**
 ```{r, out.width="50%", fig.align='center'}
 pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04110", species = "hsa",
-         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
-knitr::include_graphics("hsa04110.pathview.png")
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"),
+         out.suffix = "CENE")
+knitr::include_graphics("hsa04110.CENE.png")
 ```
 
 It's a famous conception in oncology (but also other fields such as developmental biology) that, since both migration and cellular division are really energetically expensive activities, a cell in migration will stop the cell cycle. We wanted to show this here, and we partially did by observing less upregulated cell cycle genes in glioma_NE vs control than in glioma_CE vs control; but at the end of the day, if we compare the solid CE portion of the tumor to the migrant NE portion we do not observe any relevant difference with the used methods.
@@ -1568,24 +1571,28 @@ pathview(gene.data = fold_changes_ce, pathway.id = "hsa04724", species = "hsa",
 knitr::include_graphics("hsa04724.pathview.png")
 ```
 
-By showing the glutammatergic synapse pathway in glioma_ce vs control we see (as already said multiple times) a elevate loss of synaptic function in the glioma. The loss of function might also be connected with the tumor exploiting glutammate excitotossicity. The upregulation of the PLA2's transcript (a lipase involved in inflammation) is on the other hand a clear sign of the tumor inducing an inflammatory state, that is helps it grow.
+By showing the glutammatergic synapse pathway in glioma_ce vs control we see (as already said multiple times) a elevate loss of synaptic function in the glioma. The loss of function might also be connected with the tumor exploiting glutammate excitotossicity. The upregulation of the PLA2's transcript (a lipase involved in inflammation) is on the other hand a clear sign of the tumor inducing an inflammatory state, that helps it grow.
 
-### ECM interaction in 
+### ECM interaction 
 
 **glioma_NE vs control**
 ```{r, out.width="80%", fig.align='center'}
 # interazione con ECM in glioma_NE
 
 pathview(gene.data = fold_changes_ne, pathway.id = "hsa04512", species = "hsa",
-         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
-knitr::include_graphics("hsa04512.pathview.png")
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"),
+         out.suffix = "CE")
+knitr::include_graphics("hsa04512.CE.png")
 ```
 
 ```{r, out.width="80%", fig.align='center'}
 
 pathview(gene.data = fold_changes_ne_ce, pathway.id = "hsa04512", species = "hsa",
-         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"))
-knitr::include_graphics("hsa04512.pathview.png")
+         low = list(gene = "green"), mid = list(gene = "gray"), high = list(gene = "red"),
+         out.suffix = "NE")
+         
+
+knitr::include_graphics("hsa04512.NE.png")
 ```
 
 What we see is a clear and strong sign of migration via ECM in the glioma_NE. 
